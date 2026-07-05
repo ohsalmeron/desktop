@@ -5,6 +5,20 @@
     <meta charset="UTF-8" />
   </head>
   <body>
-    <div id="desktop-app-container"></div>
+    <div id="desktop-app-container">
+      <pre id="error-log" style="color:red;white-space:pre-wrap;font-family:monospace;padding:20px;"></pre>
+    </div>
+    <script>
+      window.onerror = function(msg, url, line, col, err) {
+        var el = document.getElementById('error-log');
+        if (el) el.textContent += 'ERROR: ' + msg + '\n  at ' + url + ':' + line + ':' + col + '\n  ' + (err ? err.stack : '') + '\n\n';
+        console.error('window.onerror:', msg, url, line, col, err);
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        var el = document.getElementById('error-log');
+        if (el) el.textContent += 'PROMISE: ' + (e.reason ? (e.reason.stack || e.reason.message || e.reason) : 'unknown') + '\n\n';
+        console.error('unhandled rejection:', e.reason);
+      });
+    </script>
   </body>
 </html>
