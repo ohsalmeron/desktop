@@ -5,7 +5,7 @@
   "identifier": "com.tauri.dev",
   "build": {
     "frontendDist": "../out",
-    "beforeDevCommand": "yarn compile:dev",
+    "beforeDevCommand": "TAURI=true yarn compile:dev",
     "beforeBuildCommand": "yarn compile:prod"
   },
   "app": {

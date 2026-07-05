@@ -37,12 +37,13 @@ const getPortOrDefault = () => {
 }
 
 const port = getPortOrDefault()
+const isTauri = process.env.TAURI === 'true' || process.env.TAURI_DEV === 'true'
 const webpackHotModuleReloadUrl = `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`
-const publicPath = `http://localhost:${port}/build/`
+const publicPath = isTauri ? './' : `http://localhost:${port}/build/`
 
 const rendererConfig = merge({}, common.renderer, config, {
   entry: {
-    renderer: [webpackHotModuleReloadUrl, getRendererEntryPoint()],
+    renderer: isTauri ? getRendererEntryPoint() : [webpackHotModuleReloadUrl, getRendererEntryPoint()],
   },
   output: {
     publicPath,
@@ -65,7 +66,7 @@ const rendererConfig = merge({}, common.renderer, config, {
   infrastructureLogging: {
     level: 'error',
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: isTauri ? [] : [new webpack.HotModuleReplacementPlugin()],
 })
 
 const crashConfig = merge({}, common.crash, config, {
