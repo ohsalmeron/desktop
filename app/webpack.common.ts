@@ -9,6 +9,10 @@ export const externals = ['7zip']
 const outputDir = 'out'
 export const replacements = getReplacements()
 
+const resolve = {
+  extensions: ['.js', '.ts', '.tsx'],
+}
+
 const commonConfig: webpack.Configuration = {
   optimization: {
     emitOnErrors: false,
@@ -43,9 +47,7 @@ const commonConfig: webpack.Configuration = {
       },
     ],
   },
-  resolve: {
-    extensions: ['.js', '.ts', '.tsx'],
-  },
+  resolve,
   node: {
     __dirname: false,
     __filename: false,
@@ -66,7 +68,33 @@ export const main = merge({}, commonConfig, {
 
 export const renderer = merge({}, commonConfig, {
   entry: { renderer: path.resolve(__dirname, 'src/ui/index') },
-  target: 'electron-renderer',
+  target: 'web',
+  resolve: {
+    ...resolve,
+    alias: {
+      electron: path.resolve(__dirname, 'src/electron-shim.ts'),
+    },
+    // Prevent the renderer from using browser-specific versions of modules
+    aliasFields: [],
+    fallback: {
+      fs: false,
+      path: false,
+      child_process: false,
+      stream: false,
+      util: false,
+      timers: false,
+      module: false,
+      crypto: false,
+      os: false,
+      net: false,
+      tls: false,
+      buffer: false,
+      assert: false,
+      constants: false,
+      process: false,
+      url: false,
+    },
+  },
   module: {
     rules: [
       {
@@ -93,26 +121,52 @@ export const renderer = merge({}, commonConfig, {
         resource.request = 'vscode-jsonrpc/lib/node/main.js'
       }
     ),
+    new webpack.NormalModuleReplacementPlugin(/^node:/, resource => {
+      resource.request = resource.request.replace(/^node:/, '')
+    }),
     new webpack.DefinePlugin(
       Object.assign({}, replacements, {
         __PROCESS_KIND__: JSON.stringify('ui'),
       })
     ),
   ],
-  resolve: {
-    // Prevent the renderer from using browser-specific versions of modules
-    aliasFields: [],
-  },
 })
 
 export const crash = merge({}, commonConfig, {
   entry: { crash: path.resolve(__dirname, 'src/crash/index') },
-  target: 'electron-renderer',
+  target: 'web',
+  resolve: {
+    ...resolve,
+    alias: {
+      electron: path.resolve(__dirname, 'src/electron-shim.ts'),
+    },
+    fallback: {
+      fs: false,
+      path: false,
+      child_process: false,
+      stream: false,
+      util: false,
+      timers: false,
+      module: false,
+      crypto: false,
+      os: false,
+      net: false,
+      tls: false,
+      buffer: false,
+      assert: false,
+      constants: false,
+      process: false,
+      url: false,
+    },
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'GitHub Desktop',
       filename: 'crash.html',
       chunks: ['crash'],
+    }),
+    new webpack.NormalModuleReplacementPlugin(/^node:/, resource => {
+      resource.request = resource.request.replace(/^node:/, '')
     }),
     new webpack.DefinePlugin(
       Object.assign({}, replacements, {
