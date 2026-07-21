@@ -1,11 +1,12 @@
 #!/bin/sh
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ELECTRON="/usr/local/share/electron42/electron"
-APP_DIR="/home/bizkit/Downloads/github-desktop/out"
+APP_DIR="${SCRIPT_DIR}/out"
 GIT_DIR="${APP_DIR}/git"
 
 # Ensure window icon exists
 if [ ! -f "${APP_DIR}/static/icon-logo.png" ]; then
-    cp "/home/bizkit/Downloads/github-desktop/app/static/linux/icon-logo.png" \
+    cp "${SCRIPT_DIR}/app/static/linux/icon-logo.png" \
        "${APP_DIR}/static/icon-logo.png" 2>/dev/null || true
 fi
 

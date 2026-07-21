@@ -17,7 +17,7 @@ PYTHON="/usr/local/bin/python3"
 NODE="/usr/local/bin/node"
 NPM="/usr/local/bin/npm"
 NODE_GYP="/usr/local/lib/node_modules/npm/bin/node-gyp-bin/node-gyp"
-PROJECT_ROOT="/home/bizkit/Downloads/github-desktop"
+PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 export npm_config_target=42.0.0
 export npm_config_runtime=electron
