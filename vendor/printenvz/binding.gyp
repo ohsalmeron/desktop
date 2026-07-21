@@ -33,6 +33,10 @@
             ],
             "MACOSX_DEPLOYMENT_TARGET": "10.7"
           }
+        }],
+        ["OS=='freebsd'", {
+          'cflags!': [ '-pie' ],
+          'ldflags': [ '-pie', '-z relro', '-z now' ]
         }]
       ]
     }

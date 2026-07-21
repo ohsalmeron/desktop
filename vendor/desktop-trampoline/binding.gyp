@@ -32,11 +32,12 @@
           '-z relro',
           '-z now'
         ],
-        'msvs_settings': {
-          'VCCLCompilerTool': { 'ExceptionHandling': 1 },
-        },
         'conditions': [
-          ['OS=="win"', { 'defines': [ 'WINDOWS' ] }]
+          ['OS=="win"', { 'defines': [ 'WINDOWS' ] }],
+          ['OS=="freebsd"', {
+            'cflags!': [ '-pie' ],
+            'ldflags': [ '-pie', '-z relro', '-z now' ]
+          }]
         ]
     },
     'targets': [

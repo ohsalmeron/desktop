@@ -102,4 +102,16 @@ for (const [packageName, version] of Object.entries(
 
 export const licenseOverrides: LicenseLookup = {
   ...copilotCLILicenseEntries,
+  'buffers@0.1.1': {
+    license: 'MIT',
+    source: 'https://github.com/substack/node-buffers',
+    sourceText: 'MIT License',
+    repository: 'git+ssh://git@github.com/substack/node-buffers',
+  },
+  '@github/copilot-freebsd-x64@1.0.0': {
+    license: 'MIT',
+    source: 'https://github.com/desktop/desktop',
+    sourceText: 'MIT License',
+    repository: 'git+https://github.com/desktop/desktop',
+  },
 }
